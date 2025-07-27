@@ -14,10 +14,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
-app.use('/', (req, res) => {
-    res.send("hello world");
+//Logger for routes and methods
+app.use((req, res, next) => {
+    console.log(`Method ${req.method} has been used.\nROUTE:\n"${req.url}"`);
+    next();
 });
 
+app.use('/', (req, res) => {
+    res.render('login');
+});
+//Database check function: No Longer needed:
+/* 
 async function checkDb(){
 try {
     const result = await pool.query('SELECT NOW()');
@@ -26,8 +33,8 @@ try {
     console.error('❌ Database connection error:', err);
   }
 }
-
 checkDb();
+*/
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`✅ Server running on port http://localhost:${PORT}`));
