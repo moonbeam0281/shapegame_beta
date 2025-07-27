@@ -1,16 +1,16 @@
 {
   "name": "shape-game-beta",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node server.js"
   },
   "type": "module",
   "keywords": [],
-  "author": "",
+  "author": "Moonbeam",
   "license": "ISC",
-  "description": "",
+  "description": "Shape game development. Still in beta stages and working out new schemen for project.",
   "dependencies": {
     "dotenv": "^17.2.1",
     "ejs": "^3.1.10",
