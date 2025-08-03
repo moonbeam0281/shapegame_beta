@@ -1,97 +1,109 @@
-# Shape Game Development Checklist ✅
+# **ShapeGame To-Do Checklist**
 
-## ✅ PROJECT STRUCTURE
-- [x] Switched from JavaScript to **TypeScript**
-- [x] Organized into folders: `src/classes/`, `src/handlers/`, `src/environment/`, `src/interface/`, `src/Maps/`, `src/Menu/`, `src/Players/`
-- [x] Using Vite or Webpack for module bundling
-- [x] Clean folder setup: everything modular and organized
+## **1. EJS Files & Layout**
+- [ ] **Generate EJS files**  
+  - [ ] Build `layout.ejs` (main layout)  
+  - [ ] Add partials:  
+    - [ ] `header.ejs`  
+    - [ ] `footer.ejs`  
+    - [ ] `lobbyCard.ejs`  
+    - [ ] `playerCard.ejs`  
+  - [ ] Refactor existing views (`login.ejs`, `register.ejs`, `mainmenu.ejs`, etc.) to use the layout & partials  
 
-## 🧱 INTERFACES
-- [ ] `iUnitShape.ts` – shared interface for all unit shapes
-- [ ] `iMap.ts` – interface for map structure
+### **Folder Structure**
+```
+views/
+├── layout.ejs
+├── partials/
+│   ├── header.ejs
+│   ├── footer.ejs
+│   ├── lobbyCard.ejs
+│   └── playerCard.ejs
+├── login.ejs
+├── register.ejs
+├── mainmenu.ejs
+└── lobby.ejs
+```
 
-## 🧊 SHAPE CLASSES
-- [ ] `Cube`, `Sphere`, `Pyramid`, `Octahedron`
-- [ ] Implements `iUnitShape`
-- [ ] Properties: position, angle, health, color, owner
-- [ ] Implements: `generate()`, `destroy()`, `move()`
+---
 
-## 🗺️ MAP SYSTEM
-- [ ] `MapHandler` loads maps dynamically
-- [ ] `PlayFieldMap` as example
-- [ ] Maps stored in `src/Maps/` and implement `iMap`
-- [ ] Map includes floor mesh, lighting, background and boundaries
+## **2. Database Structure**
+- [ ] Design **PostgreSQL schema**  
+  - [ ] `Players` table (id, username, password_hash, state, created_at)  
+  - [ ] `Lobbies` table (id, name, owner_id, max_players, spectators_allowed, created_at)  
+  - [ ] `Lobby_Players` table (id, lobby_id, player_id, role)  
+- [ ] Create **migration scripts** in `db/migrations`  
+- [ ] Test schema with sample data  
 
-## 🔦 ENVIRONMENT & RENDERING
-- [ ] `SceneHandler.ts` sets up Three.js scene
-- [ ] `LightingHandler.ts` set up Ambient + directional light
-- [ ] RTS style Camera with custom controls and bounds
-- [ ] In-Game UI with minimap
+### **Folder Structure**
+```
+db/
+├── migrations/
+│   ├── create_players_table.sql
+│   ├── create_lobbies_table.sql
+│   └── create_lobby_players_table.sql
+└── pool.js
+```
 
-## 🧍 PLAYER SYSTEM
-- [x] `PlayerHandler` manages all players
-- [x] Each player has: numeric ID, name, and state
-- [ ] Use UUID for players to avoid same player name deletion
-- [ ] Update player-service.ts to handle deletion and registry
-- [ ] Optimise to delete players from memory when logging out and deleteing guest users from the database and memory
+---
 
-## 🧠 MEMORY AND DATABASE UPDATES
-- [ ] Cleaning a player or lobby from memory once they leave or are deleted
-- [ ] Delete guest accounts upon log-out or offline for a longer than X minutes
+## **3. Handlers**
+- [ ] **Game Engine Handler**  
+  - [ ] Set up core logic  
+  - [ ] Implement rendering using **THREE.js**  
+    - Suggestion: Consider **Babylon.js** or **PlayCanvas** as alternative 3D engines (better built-in scene management)  
+- [ ] **Map Handlers**  
+  - [ ] Define map classes  
+  - [ ] Manage map generation/loading  
+- [ ] **Player Handlers**  
+  - [ ] Manage player state (online, offline, in-lobby, in-game)  
+  - [ ] Handle login/logout logic  
+- [ ] **Lobby Handlers**  
+  - [ ] Create/update/delete lobbies  
+  - [ ] Manage players inside lobbies  
 
-## 🛋️ LOBBY SYSTEM
-- [ ] Auto-refresh the lobby list every X seconds (or preferbly WebSocket update)
-- [ ] Show loading animation while fetching
-- [ ] Prevent joining full lobbies
-- [ ] Disable spectate if lobby doesn’t allow it
-- [ ] Dynamically update the players within a lobby on the page
-- [ ] Online Players tracker; Need to update the player system and database and implement refreshing the page update
-- [ ] Add icons to players
-- [ ] Lobby filtering
+### **Folder Structure**
+```
+handlers/
+├── GameEngineHandler.js
+├── MapHandler.js
+├── PlayerHandler.js
+└── LobbyHandler.js
+```
 
-## LOBBY PAGE
-- [x] `LobbyHandler` includes:
-  - Lobby ID, name, max players, players array
-  - Spectator flag
-- [x] Kicks all players if owner leaves
-- [x] Deletes empty lobbies
-- [ ] Need to update lobbyHandlers to send a post game result to the Postgres database
+---
 
-## 🛠️ DEVELOPER PANEL
-- [x] Hidden behind secret token
-- [x] Reads from `.txt` file (Git-ignored)
-- [x] Dev Panel appears only if key file exists
-- [ ] List all players from DB and in Memory and delete/manage the DB
+## **4. Memory & Database Handling**
+- [ ] **JSON-based cache**  
+  - [ ] Keep `players.json` & `lobbies.json` in memory for active sessions  
+  - [ ] Update JSON cache on player/lobby changes  
+- [ ] **Database persistence**  
+  - [ ] Save **players** in the database (on registration/login)  
+  - [ ] Sync active players (online) with JSON cache  
+  - [ ] Optionally save lobbies to DB for long-term persistence  
 
-## 🖥️ FRONTEND SYSTEM
-- [x] `index.html` for UI
-- [x] Modals: Register, Lobby Creation
-- [x] Displays player ID and name
-- [x] Logout button → sets state to `offline`
-- [x] Dev Panel visibility based on dev key
-- [x] Update Lobby into a fully finished main menu
-- [ ] Add a Player page for player info and stats
-- [ ] Lobby UI needs updates and fixes and implement functionality
+### **Folder Structure**
+```
+data/
+├── players.json
+└── lobbies.json
+```
 
-### 🔄 Backend API
-- [x] Routes: `/createLobby`, `/joinLobby`, `/leaveLobby`, `/deleteLobby`
-- [ ] Auto-handle player state transitions
-- [ ] Lobby cleanup logic
-- [ ] Player logout cleanup logic
-- [ ] Maintain information when refreshing page and reloading the UI
+---
 
-# Plan for the gameplay and implementations of logic
-### ⚙️ Shape Behaviors
-- [ ] Add collision-based shape pushing
-- [ ] Cube tilting on impact
-- [ ] Map-boundary enforcement
-- [ ] Glowing trail effect (optional)
-- [ ] TO BE ADDED MORE:
+## **5. System Additions**
+- [ ] **Page reload handling**  
+  - [ ] Preserve session state on refresh (routes + cache)  
+  - [ ] Redirect to appropriate page if not authenticated  
+- [ ] **Security improvements**  
+  - [ ] Sanitize user input (prevent SQL injection & XSS)  
+  - [ ] Use `bcrypt` for password hashing  
+  - [ ] Implement CSRF tokens for login/register  
+  - [ ] Lock down database with proper user privileges  
 
-### 🎮 Gameplay Logic
-- [ ] Basic movement + attack commands
-- [ ] Health/damage system
-- [ ] Ownership per shape
+---
 
-### 🎮 Alternative Gameplay idea:
-Create an engine or sepparte exe file that could be downloaded on the pc, mainmenu is on browser and upon starting the game players are re-directed into the game where it starts up.
+## **6. Testing**
+- [ ] Create mock players/lobbies for testing  
+- [ ] Ensure all routes handle invalid sessions gracefully  
+- [ ] Verify 3D engine integration  

@@ -2,17 +2,19 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import pool from './db/pool.js';
+import { checkDb, initDb } from './db/dbHandler.js';
 
 dotenv.config();
 const app = express();
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+global.__dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+await checkDb();
+await initDb();
 
 //Logger for routes and methods
 app.use((req, res, next) => {
@@ -20,21 +22,22 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/', (req, res) => {
-    res.render('login');
+app.get('/', (req, res) => {
+    res.redirect('/login');
 });
-//Database check function: No Longer needed:
-/* 
-async function checkDb(){
-try {
-    const result = await pool.query('SELECT NOW()');
-    console.log('✅ Database connected at:', result.rows[0].now);
-  } catch (err) {
-    console.error('❌ Database connection error:', err);
-  }
-}
-checkDb();
-*/
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  // TODO: validate user against database (or json for now)
+  // For now, just redirect to main menu
+  res.redirect('/mainmenu');
+});
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ Server running on port http://localhost:${PORT}`));

@@ -1,11 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shape Game Login</title>
-</head>
-<body>
-    <h1>Testing this file!</h1>
-</body>
-</html>
+<%- include('partials/header', { title: 'Login' }) %>
+
+<div class="login-container">
+  <h1>ShapeGame Login</h1>
+
+  <form action="/login" method="POST" class="login-form">
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+
+  <p>Don't have an account? <a href="/register">Register here</a></p>
+</div>
+
+<%- include('partials/footer') %>
